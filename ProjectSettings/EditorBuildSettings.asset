@@ -6,4 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/BitmapDrawing/Example.unity
+    path: Assets/KOFSoftEngine/BTGSoftRenderScene.unity
+    guid: 2cc7461a6d2900b49aaa35bd1527b1a6
