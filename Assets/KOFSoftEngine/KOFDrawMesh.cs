@@ -163,13 +163,20 @@ public class KOFDrawMesh : MonoBehaviour
         VertexBuffer = MeshData.vertices;
         IndexBuffer = MeshData.GetIndices(0);
 #endif
-        //InvokeRepeating("GraphicTest", 5f, 5f);
     }
 
     private void OnDestroy()
     {
         DestroyImmediate(frontBuffer);
         frontBuffer = null;
+    }
+
+    void OnValidate()
+    {
+#if !DrawCustomCube
+        VertexBuffer = MeshData.vertices;
+        IndexBuffer = MeshData.GetIndices(0);
+#endif
     }
 
     private void GraphicTest()
@@ -181,7 +188,7 @@ public class KOFDrawMesh : MonoBehaviour
     {
         if (UpdateData)
         {
-            //rotation.Set(rotation.x, rotation.y + Time.deltaTime * 30f, rotation.z);
+            rotation.Set(rotation.x, rotation.y + Time.deltaTime * 30f, rotation.z);
             DrawMesh();
         }
     }
