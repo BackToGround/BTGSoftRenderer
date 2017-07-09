@@ -246,12 +246,6 @@ public class KOFDrawMesh : MonoBehaviour
 
                         frontBuffer.DrawTriangle(sortVectorY[0], sortVectorY[1], sortVectorY[2], LineColor);
                     }
-
-                    int indexCount = IndexBuffer.Length;
-                    for (int i = 0; i < indexCount; i++)
-                    {
-                        frontBuffer.DrawPixel((int)tempVertexBuffer[IndexBuffer[i]].x, (int)tempVertexBuffer[IndexBuffer[i]].y, LineColor);
-                    }
                 }
             }
 #else
