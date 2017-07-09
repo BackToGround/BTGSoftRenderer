@@ -219,6 +219,7 @@ public class KOFDrawMesh : MonoBehaviour
                     frontBuffer.DrawLine(tempVertexBuffer[i], tempVertexBuffer[i + 1], LineColor);
                     frontBuffer.DrawLine(tempVertexBuffer[i], tempVertexBuffer[i + 2], LineColor);
                 }
+                frontBuffer.DrawLine(tempVertexBuffer[0], tempVertexBuffer[vertecCount - 1], LineColor);
             }
             else if (mDrawMode == DrawMode.TriangleType)
             {
