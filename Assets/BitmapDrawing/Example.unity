@@ -201,17 +201,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1199403797}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeeca41eed71ea744999a11131a9eea0, type: 3}
+  m_Script: {fileID: 11500000, guid: 214ca269bd9fc354aab11060950e6476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MeshData: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  LineColor: {r: 1, g: 1, b: 1, a: 0}
-  focalLength: -8.53
-  rotation: {x: -28.4, y: 296.89548, z: 0}
-  position: {x: 0, y: 0, z: 0}
-  scale: {x: 100.12, y: 100, z: 0}
-  UpdateData: 1
 --- !u!1 &1913734782
 GameObject:
   m_ObjectHideFlags: 0

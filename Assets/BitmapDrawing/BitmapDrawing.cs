@@ -351,6 +351,63 @@ namespace ProtoTurtle.BitmapDrawing
             Line(texture, x0, y0, x1, y1, color);
         }
 
+        public static void DrawTriangle(this Texture2D texture, Vector3 v0, Vector3 v1, Vector3 v2, Color color)
+        {
+            if (v1.y == v2.y)
+            {
+                fillBottomFlatTriangle(texture, v0, v1, v2, color);
+            }
+            else if (v0.y == v1.y)
+            {
+                fillTopFlatTriangle(texture, v0, v1, v2, color);
+            }
+            else
+            {
+                Vector3 v3 = new Vector3(
+                    v0.x + (v1.y - v0.y) / (v2.y - v0.y) * (v2.x - v0.x),
+                    v1.y,
+                    0f
+                    );
+
+                fillBottomFlatTriangle(texture, v0, v1, v3, color);
+                fillTopFlatTriangle(texture, v1, v3, v2, color);
+            }
+        }
+
+        private static void fillBottomFlatTriangle(this Texture2D texture, Vector3 v0, Vector3 v1, Vector3 v2, Color color)
+        {
+            float dx_left = (v1.x - v0.x) / (v1.y - v0.y);
+            float dx_right = (v2.x - v0.x) / (v2.y - v0.y);
+
+            float x_left = v0.x;
+            float x_right = v0.x;
+
+            for (int y = (int)v0.y; y <= (int)v1.y; y++)
+            {
+                DrawLine(texture, new Vector2(x_left, y), new Vector2(x_right, y), color);
+
+                x_left += dx_left;
+                x_right += dx_right;
+            }
+        }
+
+        private static void fillTopFlatTriangle(this Texture2D texture, Vector3 v0, Vector3 v1, Vector3 v2, Color color)
+        {
+            float dx_left = (v2.x - v0.x) / (v2.y - v0.y);
+            float dx_right = (v2.x - v1.x) / (v2.y - v1.y);
+
+            float x_left = v2.x;
+            float x_right = v2.x;
+
+            for (int y = (int)v2.y; y > (int)v0.y; y--)
+            {
+                DrawLine(texture, new Vector2(x_left, y), new Vector2(x_right, y), color);
+
+                x_left -= dx_left;
+                x_right -= dx_right;
+            }
+        }
+
         private static void Line(Texture2D texture, int x0, int y0, int x1, int y1, Color color)
         {
             int width = texture.width;

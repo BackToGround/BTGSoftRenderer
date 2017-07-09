@@ -14,6 +14,18 @@ using ProtoTurtle.BitmapDrawing;
 [ExecuteInEditMode]
 public class KOFDrawMesh : MonoBehaviour
 {
+    /// <summary>
+    /// 渲染模式
+    /// </summary>
+    public enum DrawMode
+    {
+        //线框渲染
+        LineType,
+
+        //三角形渲染
+        TriangleType,
+    }
+
     public Mesh MeshData;
 
     public Color ClearColor;
@@ -33,6 +45,8 @@ public class KOFDrawMesh : MonoBehaviour
     public bool UpdateData = true;
 
     private Material mMaterial;
+
+    public DrawMode mDrawMode = DrawMode.TriangleType;
 
     private Matrix4x4 ScaleMatrix
     {
@@ -111,7 +125,7 @@ public class KOFDrawMesh : MonoBehaviour
         }
     }
 
-    private Vector3[] VertexBuffer = new Vector3[] 
+    private Vector3[] VertexBuffer = new Vector3[]
     {
         new Vector3(1, -1, 1),
         new Vector3(-1, -1, 1),
@@ -121,6 +135,17 @@ public class KOFDrawMesh : MonoBehaviour
         new Vector3(-1, -1, -1),
         new Vector3(-1, 1, -1),
         new Vector3(1, 1, -1),
+    };
+
+    private int[] IndexBuffer = new int[]
+    {
+        0,
+        2,
+        1,
+
+        0,
+        1,
+        3,
     };
 
     private void Awake()
@@ -136,9 +161,9 @@ public class KOFDrawMesh : MonoBehaviour
     {
 #if !DrawCustomCube
         VertexBuffer = MeshData.vertices;
+        IndexBuffer = MeshData.GetIndices(0);
 #endif
-
-        InvokeRepeating("GraphicTest", 5f, 5f);
+        //InvokeRepeating("GraphicTest", 5f, 5f);
     }
 
     private void OnDestroy()
@@ -156,7 +181,7 @@ public class KOFDrawMesh : MonoBehaviour
     {
         if (UpdateData)
         {
-            rotation.Set(rotation.x, rotation.y + Time.deltaTime * 30f, rotation.z);
+            //rotation.Set(rotation.x, rotation.y + Time.deltaTime * 30f, rotation.z);
             DrawMesh();
         }
     }
@@ -180,10 +205,54 @@ public class KOFDrawMesh : MonoBehaviour
             }
 
 #if !DrawCustomCube
-            for (int i = 0; i < vertecCount - 2; i++)
+            if (mDrawMode == DrawMode.LineType)
             {
-                frontBuffer.DrawLine(tempVertexBuffer[i], tempVertexBuffer[i + 1], LineColor);
-                frontBuffer.DrawLine(tempVertexBuffer[i], tempVertexBuffer[i + 2], LineColor);
+                for (int i = 0; i < vertecCount - 2; i++)
+                {
+                    frontBuffer.DrawLine(tempVertexBuffer[i], tempVertexBuffer[i + 1], LineColor);
+                    frontBuffer.DrawLine(tempVertexBuffer[i], tempVertexBuffer[i + 2], LineColor);
+                }
+            }
+            else if (mDrawMode == DrawMode.TriangleType)
+            {
+                if (IndexBuffer.Length % 3 != 0)
+                {
+                    Debug.LogWarning("Index Buffer's length has to be multiple of 3");
+                }
+                else
+                {
+                    int triangleCount = IndexBuffer.Length / 3;
+                    for (int i = 0; i < triangleCount; i++)
+                    {
+                        Vector3[] sortVectorY = new Vector3[3]
+                        {
+                            tempVertexBuffer[IndexBuffer[i*3]],
+                            tempVertexBuffer[IndexBuffer[i*3 + 1]],
+                            tempVertexBuffer[IndexBuffer[i*3 + 2]],
+                        };
+
+                        for (int j = 0; j < 3; j++)
+                        {
+                            for (int k = j; k < 3; k++)
+                            {
+                                if (sortVectorY[j].y > sortVectorY[k].y)
+                                {
+                                    Vector3 temp = sortVectorY[j];
+                                    sortVectorY[j] = sortVectorY[k];
+                                    sortVectorY[k] = temp;
+                                }
+                            }
+                        }
+
+                        frontBuffer.DrawTriangle(sortVectorY[0], sortVectorY[1], sortVectorY[2], LineColor);
+                    }
+
+                    int indexCount = IndexBuffer.Length;
+                    for (int i = 0; i < indexCount; i++)
+                    {
+                        frontBuffer.DrawPixel((int)tempVertexBuffer[IndexBuffer[i]].x, (int)tempVertexBuffer[IndexBuffer[i]].y, LineColor);
+                    }
+                }
             }
 #else
             frontBuffer.DrawLine(tempVertexBuffer[0], tempVertexBuffer[1], Color.red);
