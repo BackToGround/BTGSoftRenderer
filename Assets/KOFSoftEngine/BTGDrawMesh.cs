@@ -11,7 +11,7 @@ using ProtoTurtle.BitmapDrawing;
 
 namespace BTGRender
 {
-    //[ExecuteInEditMode]
+    [ExecuteInEditMode]
     public class BTGDrawMesh : MonoBehaviour
     {
         /// <summary>
